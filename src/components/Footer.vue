@@ -1,6 +1,6 @@
 <template>
   <footer>
-    © 2025 Vue Social App
+    © 2025 PostIT
   </footer>
 </template>
 

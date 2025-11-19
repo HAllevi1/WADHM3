@@ -9,7 +9,6 @@
 
       <button type="submit">Sign Up</button>
 
-      <p>Already have an account? <a href="login.html">Log in</a></p>
     </form>
   </div>
 </template>
