@@ -9,19 +9,19 @@
           <i class="fas fa-user-circle"></i>
           <span class="post-date">{{ formatDate(post.created_at) }}</span>
         </div>
-
         <img v-if="post.image" :src="post.image" alt="Post image" class="post-image" />
         <div class="post-text">{{ post.content }}</div>
         <div class="post-actions">
           <i 
             class="fas fa-thumbs-up" 
-            @click="likePost(post.id)" 
-            :style="{ color: post.liked ? '#007BFF' : '#777' }"
+            @click="likePost(post.id)"
           ></i>
           <span>{{ post.likes }}</span>
         </div>
       </div>
+      <button @click="resetLikes">Reset Likes</button>
     </section>
+
 
     <aside class="right-sidebar">
     </aside>
@@ -47,11 +47,17 @@ export default {
       const post = this.posts.find(p => p.id === id)
       if (post) {
         post.liked = !post.liked
-        post.likes += post.liked ? 1 : -1
+        post.likes += 1
       }
     },
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString('et-EE')
+    },
+    resetLikes() {
+      for (const post of this.posts) {
+        post.liked = false
+        post.likes = 0
+      }
     }
   }
 }
