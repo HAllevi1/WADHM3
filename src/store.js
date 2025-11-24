@@ -1,10 +1,10 @@
 import { createStore } from 'vuex'
-
+// Veendu, et failitee on õige. Kui store.js on src kaustas, siis see on OK.
 import postsData from './assets/objektid.json'
 
 export default createStore({
   state: {
-    // Laen andmed JSONist algseisundisse
+    // Laeme andmed JSONist algseisundisse
     posts: postsData.map(p => ({
       ...p,
       likes: p.likes || 0 // Kui JSONis pole like'e, alustame nullist
