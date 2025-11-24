@@ -1,65 +1,64 @@
 <template>
   <main id="mainContent">
-    <aside class="left-sidebar"></aside>
+    <aside class="left-sidebar">
+    </aside>
 
     <section class="posts-feed">
-      <!-- Reset nupp (Nõue 4.3) -->
-      <div class="controls">
-        <button @click="resetLikes" class="reset-btn">Reset All Likes</button>
+      <div v-for="post in posts" :key="post.id" class="post">
+        <div class="post-header">
+          <i class="fas fa-user-circle"></i>
+          <span class="post-date">{{ formatDate(post.created_at) }}</span>
+        </div>
+        <img v-if="post.image" :src="post.image" alt="Post image" class="post-image" />
+        <div class="post-text">{{ post.content }}</div>
+        <div class="post-actions">
+          <i
+            class="fas fa-thumbs-up"
+            @click="likePost(post.id)"
+          ></i>
+          <span>{{ post.likes }}</span>
+        </div>
       </div>
-
-      <!-- KASUTAME KOMPONENTI, mitte ei kirjuta HTML-i siia -->
-      <!-- Itereerime üle 'posts' (mis tuleb store-ist) -->
-      <Post
-          v-for="post in posts"
-          :key="post.id"
-          :post="post"
-      />
+      <button @click="resetLikes">Reset Likes</button>
     </section>
 
-    <aside class="right-sidebar"></aside>
+
+    <aside class="right-sidebar">
+    </aside>
   </main>
 </template>
 
 <script>
-// Impordime komponendi
-import Post from '../components/Post.vue'
-import { mapGetters, mapActions } from 'vuex'
+import postsData from '../assets/objektid.json'
 
 export default {
   name: 'MainPage',
-  components: {
-    Post // Registreerime komponendi kasutamiseks
+  data() {
+    return {
+      posts: []
+    }
   },
-  computed: {
-    // Ühendame Store'i andmed selle vaatega
-    // Nüüd 'this.posts' on automaatselt ühendatud store.js 'posts' massiiviga
-    ...mapGetters({
-      posts: 'allPosts'
-    })
+  mounted() {
+    // Load posts from JSON
+    this.posts = postsData.map(post => ({ ...post, liked: false }))
   },
   methods: {
-    // Ühendame Store'i tegevuse selle nupuga
-    ...mapActions(['resetLikes'])
+    likePost(id) {
+      const post = this.posts.find(p => p.id === id)
+      if (post) {
+        post.liked = !post.liked
+        post.likes += 1
+      }
+    },
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('et-EE')
+    },
+    resetLikes() {
+      for (const post of this.posts) {
+        post.liked = false
+        post.likes = 0
+      }
+    }
   }
 }
 </script>
-
-<style scoped>
-.posts-feed {
-  max-width: 600px;
-  margin: 0 auto;
-}
-.controls {
-  margin-bottom: 20px;
-  text-align: center;
-}
-.reset-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-</style>
